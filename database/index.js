@@ -2,15 +2,17 @@ const { Pool } = require("pg");
 require("dotenv").config();
 /* ***************
  * Connection Pool
- * SSL Object needed for local testing of app
- * But will cause problems in production environment
- * If - else will make determination which to use
+ * Hosted Postgres providers (Neon, Render, Supabase) require SSL.
+ * Their certs aren't in Node's default trust store, so we use
+ * { rejectUnauthorized: false } to encrypt without rejecting the cert.
+ * The NODE_ENV check only adds query logging in development;
+ * both branches connect with SSL.
  * *************** */
 let pool;
 if (process.env.NODE_ENV == "development") {
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: false,
+    ssl: { rejectUnauthorized: false },
   });
 
   // Added for troubleshooting queries
@@ -30,6 +32,7 @@ if (process.env.NODE_ENV == "development") {
 } else {
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
   });
   module.exports = pool;
 }
