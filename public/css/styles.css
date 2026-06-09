@@ -11,9 +11,11 @@
 }
 
 /* Black page background so navigation flashes through black, not white.
-   Content lives in #wrapper, which keeps a white background for readability. */
-html,
-body {
+   Black lives on html (the canvas) so it always fills the viewport and is the
+   flash color during transitions. The checkerboard image (larger.css) also sits
+   on html so it fills the whole screen; body is left transparent so it doesn't
+   clip the background to its own box. Content lives in #wrapper (white). */
+html {
   background-color: black;
 }
 
